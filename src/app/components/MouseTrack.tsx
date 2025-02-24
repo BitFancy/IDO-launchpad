@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { motion, useMotionValue } from "framer-motion";
 import VideoPlayer from "./VideoPlayer";
 // import Image from "next/image";
 // import TrackCursor from "../../../public/assets/icon/sidebarclaim.png";
