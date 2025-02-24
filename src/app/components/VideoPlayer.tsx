@@ -13,7 +13,6 @@ const VideoPlayer = ({ fileName, className, loop }: VideoPlayerProps) => {
     useEffect(() => {
         if(videoRef.current) {
             console.log(" osType -> ", osType);
-            alert(osType);
             videoRef.current.src = osType === 'iOS' ? `/assets/back/${fileName}.mov` : `/assets/back/${fileName}.webm`;
             videoRef.current.className = className ?? "";
             videoRef.current.loop = loop ?? false;
