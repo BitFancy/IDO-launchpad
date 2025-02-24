@@ -24,7 +24,6 @@ const MouseTrack: React.FC = () => {
 
     const smoothX = useSpring(x, { stiffness: 50, damping: 50 });
     const smoothY = useSpring(y, { stiffness: 50, damping: 50 });
-    console.log('smoothX and smoothY -> ', smoothX, ': ', smoothY);
 
     const handleMouseMove = useCallback(
         (event: MouseEvent) => {

@@ -27,6 +27,10 @@ const VideoPlayer = ({ fileName, className, loop }: VideoPlayerProps) => {
         !ua.includes("chrome") &&
         ua.includes("version/");
 
+        console.log(" isSafari, hasMediaCapabilities -> ", isSafari && hasMediaCapabilities);
+        alert(isSafari && hasMediaCapabilities);
+
+
         return isSafari && hasMediaCapabilities;
     }
 
