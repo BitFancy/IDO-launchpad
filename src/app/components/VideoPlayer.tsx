@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface VideoPlayerProps {
     fileName: string;
@@ -17,8 +17,28 @@ const VideoPlayer = ({ fileName, className, loop }: VideoPlayerProps) => {
         }
     }, [fileName, className, loop]);
 
+    const [deviceType, setDeviceType] = useState('');
+
+    useEffect(() => {
+      const userAgent = navigator.userAgent;
+      console.log(" userAgent -> ", userAgent);
+      alert(userAgent);
+  
+      if (/iPhone|iPad|iPod/i.test(userAgent)) {
+        setDeviceType('iOS');
+      } else if (/Windows/i.test(userAgent)) {
+        setDeviceType('Windows');
+      } else if (/Android/i.test(userAgent)) {
+        setDeviceType('Android');
+      } else {
+        setDeviceType('Other');
+      }
+      console.log(" deviceType -> ", deviceType);
+    }, []);
+
     const supportsHEVCAlpha = () => {
         const ua = navigator.userAgent.toLowerCase();
+        // console.log(" ua -> ", ua);
         const hasMediaCapabilities = !!(
         navigator.mediaCapabilities && navigator.mediaCapabilities.decodingInfo
         );
@@ -27,8 +47,8 @@ const VideoPlayer = ({ fileName, className, loop }: VideoPlayerProps) => {
         !ua.includes("chrome") &&
         ua.includes("version/");
 
-        console.log(" isSafari, hasMediaCapabilities -> ", isSafari && hasMediaCapabilities);
-        alert(isSafari && hasMediaCapabilities);
+        // console.log(" isSafari, hasMediaCapabilities -> ", isSafari && hasMediaCapabilities);
+        // alert(isSafari && hasMediaCapabilities);
 
 
         return isSafari && hasMediaCapabilities;
