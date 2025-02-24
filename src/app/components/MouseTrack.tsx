@@ -92,7 +92,7 @@ const MouseTrack: React.FC = () => {
                         display: "block",
                     }}
                 /> */}
-                <VideoPlayer fileName="mousetracker" width="58px" height="58px" loop={true} />
+                <VideoPlayer fileName="mousetracker" className="xl:flex items-center justify-center w-[58px] h-[58px]" loop={true} />
             </motion.div>
         </div>
     );
