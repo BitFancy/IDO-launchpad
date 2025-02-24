@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
+import VideoPlayer from "./VideoPlayer";
 // import Image from "next/image";
 // import TrackCursor from "../../../public/assets/icon/sidebarclaim.png";
 // import TrackCursor from "@/assets/icon/Fmedia.png"
@@ -91,9 +92,7 @@ const MouseTrack: React.FC = () => {
                         display: "block",
                     }}
                 /> */}
-                <video ref={imageRef} autoPlay muted className="xl:flex items-center justify-center w-[58px] h-[58px]">
-                    <source src="/assets/icon/mousetracker.mp4" type="video/mp4" />
-                </video>
+                <VideoPlayer fileName="mousetracker" width="58px" height="58px" loop={true} />
             </motion.div>
         </div>
     );

@@ -5,6 +5,7 @@ import aptos from "../../../../public/assets/category/aptos.png";
 import katman from "../../../../public/assets/category/katma.png";
 
 import { Jost } from "next/font/google";
+import VideoPlayer from "@/app/components/VideoPlayer";
 
 const jost = Jost({
     subsets: ["latin"],
@@ -80,13 +81,9 @@ export default function intruduce() {
                     </a>
                 </div>
             </div>
-            <video
-                autoPlay
-                muted
-                className="hidden xl:flex items-center justify-center w-[558px] h-[558px]"
-            >
-                <source src="/assets/back/banner.webm" type='video/webm' />
-            </video>
+            <VideoPlayer fileName="banner" width="558px" height="558px" loop={false} />
+            
+            
         </div>
     );
 }
