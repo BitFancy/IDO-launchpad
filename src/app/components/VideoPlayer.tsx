@@ -8,51 +8,36 @@ interface VideoPlayerProps {
 
 const VideoPlayer = ({ fileName, className, loop }: VideoPlayerProps) => {
     const videoRef = useRef<HTMLVideoElement>(null);
+    const [osType, setOsType] = useState('');
     
     useEffect(() => {
         if(videoRef.current) {
-            videoRef.current.src = supportsHEVCAlpha() ? `/assets/back/${fileName}.mov` : `/assets/back/${fileName}.mov`;
+            console.log(" osType -> ", osType);
+            alert(osType);
+            videoRef.current.src = osType === 'iOS' ? `/assets/back/${fileName}.mov` : `/assets/back/${fileName}.webm`;
             videoRef.current.className = className ?? "";
             videoRef.current.loop = loop ?? false;
         }
-    }, [fileName, className, loop]);
+    }, [fileName, className, loop, osType]);
 
-    const [deviceType, setDeviceType] = useState('');
 
     useEffect(() => {
-      const userAgent = navigator.userAgent;
-      console.log(" userAgent -> ", userAgent);
-      alert(userAgent);
-  
-      if (/iPhone|iPad|iPod/i.test(userAgent)) {
-        setDeviceType('iOS');
-      } else if (/Windows/i.test(userAgent)) {
-        setDeviceType('Windows');
-      } else if (/Android/i.test(userAgent)) {
-        setDeviceType('Android');
-      } else {
-        setDeviceType('Other');
-      }
-      console.log(" deviceType -> ", deviceType);
+        const userAgent = navigator.userAgent;
+    
+        if (/iPhone|iPad|iPod/i.test(userAgent)) {
+            console.log('its ios')
+            setOsType('iOS');
+        } else if (/Windows/i.test(userAgent)) {
+            console.log('its windows')
+            setOsType('Windows');
+        } else if (/Android/i.test(userAgent)) {
+            console.log('its android')
+            setOsType('Android');
+        } else {
+            console.log('its other')
+            setOsType('Other');
+        }
     }, []);
-
-    const supportsHEVCAlpha = () => {
-        const ua = navigator.userAgent.toLowerCase();
-        // console.log(" ua -> ", ua);
-        const hasMediaCapabilities = !!(
-        navigator.mediaCapabilities && navigator.mediaCapabilities.decodingInfo
-        );
-        const isSafari =
-        ua.includes("safari") &&
-        !ua.includes("chrome") &&
-        ua.includes("version/");
-
-        // console.log(" isSafari, hasMediaCapabilities -> ", isSafari && hasMediaCapabilities);
-        // alert(isSafari && hasMediaCapabilities);
-
-
-        return isSafari && hasMediaCapabilities;
-    }
 
     return (
         <video
