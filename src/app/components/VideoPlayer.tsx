@@ -11,7 +11,7 @@ const VideoPlayer = ({ fileName, className, loop }: VideoPlayerProps) => {
     
     useEffect(() => {
         if(videoRef.current) {
-            videoRef.current.src = supportsHEVCAlpha() ? `/assets/back/${fileName}.mov` : `/assets/back/${fileName}.webm`;
+            videoRef.current.src = supportsHEVCAlpha() ? `/assets/back/${fileName}.mov` : `/assets/back/${fileName}.mov`;
             videoRef.current.className = className ?? "";
             videoRef.current.loop = loop ?? false;
         }
