@@ -31,13 +31,7 @@ export default function intruduce() {
     return (
         <div className="w-full m-auto xl:mt-[70px] mt-[30px] xl:flex justify-between">
             <div className="w-full flex justify-center xl:hidden ">
-                <video
-                    autoPlay
-                    muted
-                    className="xl:w-[532px] w-moonwidth h-moonheight xl:h-[532px] flex items-center justify-center"
-                >
-                    <source src="/assets/back/banner.webm" type="video/webm" />
-                </video>
+                <VideoPlayer fileName="banner" width="558px" height="558px" loop={false} />
             </div>
 
             <div className="xl:w-[670px] mr-[10px] flex flex-col items-center xl:block mt-[50px] xl:mt-0px">
@@ -82,8 +76,6 @@ export default function intruduce() {
                 </div>
             </div>
             <VideoPlayer fileName="banner" width="558px" height="558px" loop={false} />
-            
-            
         </div>
     );
 }
