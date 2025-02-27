@@ -3,9 +3,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion, useMotionValue } from "framer-motion";
 import VideoPlayer from "./VideoPlayer";
-// import Image from "next/image";
-// import TrackCursor from "../../../public/assets/icon/sidebarclaim.png";
-// import TrackCursor from "@/assets/icon/Fmedia.png"
 interface MousePosition {
     x: number;
     y: number;
@@ -21,9 +18,6 @@ const MouseTrack: React.FC = () => {
 
     const x = useMotionValue(mousePosition?.x ?? 0);
     const y = useMotionValue(mousePosition?.y ?? 0);
-
-    // const smoothX = useSpring(x, { stiffness: 50, damping: 50 });
-    // const smoothY = useSpring(y, { stiffness: 50, damping: 50 });
 
     const handleMouseMove = useCallback(
         (event: MouseEvent) => {
@@ -81,16 +75,6 @@ const MouseTrack: React.FC = () => {
                     rotate: rotation,
                 }}
             >
-                {/* <Image
-                    ref={imageRef}
-                    src={TrackCursor}
-                    alt="Tracking Image"
-                    width={30}
-                    height={30}
-                    style={{
-                        display: "block",
-                    }}
-                /> */}
                 <VideoPlayer fileName="mousetracker" className="xl:flex items-center justify-center w-[58px] h-[58px]" loop={true} />
             </motion.div>
         </div>
