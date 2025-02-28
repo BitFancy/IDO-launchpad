@@ -1,66 +1,57 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import { motion, useMotionValue } from "framer-motion";
+import React, { useState, useEffect, useCallback } from "react";
+import { motion, useMotionValue, animate } from "framer-motion";
 import VideoPlayer from "./VideoPlayer";
+
 interface MousePosition {
     x: number;
     y: number;
 }
 
 const MouseTrack: React.FC = () => {
-    const [mousePosition, setMousePosition] = useState<MousePosition | null>(
-        null
-    );
+    const [mousePosition, setMousePosition] = useState<MousePosition | null>(null);
     const [isVisible, setIsVisible] = useState(false);
-    const imageRef = useRef<HTMLVideoElement>(null);
     const [rotation, setRotation] = useState<number>(0);
+    const [lastRotation, setLastRotation] = useState<number>(0);
 
-    const x = useMotionValue(mousePosition?.x ?? 0);
-    const y = useMotionValue(mousePosition?.y ?? 0);
+    const x = useMotionValue(0);
+    const y = useMotionValue(0);
 
-    const handleMouseMove = useCallback(
-        (event: MouseEvent) => {
-            x.set(event.clientX);
-            y.set(event.clientY);
-            setMousePosition({ x: event.clientX, y: event.clientY });
-            if (!isVisible) {
-                setIsVisible(true);
-            }
-        },  
-        [isVisible]
-    );
+    const trackerSize = 58; // Adjust based on tracker size
+    const offset = 25; // Move tracker slightly below the mouse
+
+    const handleMouseMove = useCallback((event: MouseEvent) => {
+        const { clientX, clientY } = event;
+        
+        setMousePosition({ x: clientX, y: clientY });
+        if (!isVisible) setIsVisible(true);
+
+        // Smooth animation for better UX
+        animate(x, clientX - trackerSize / 2, { duration: 0.2 });
+        animate(y, clientY - trackerSize / 2 + offset, { duration: 0.2 });
+    }, [isVisible, x, y]);
 
     useEffect(() => {
         window.addEventListener("mousemove", handleMouseMove);
-        return () => {
-            window.removeEventListener("mousemove", handleMouseMove);
-        };
+        return () => window.removeEventListener("mousemove", handleMouseMove);
     }, [handleMouseMove]);
 
     useEffect(() => {
         if (!mousePosition) return;
 
-        x.set(mousePosition.x);
-        y.set(mousePosition.y);
+        const { x: mouseX, y: mouseY } = mousePosition;
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
 
-        if (imageRef.current) {
-            const imageElement: HTMLVideoElement = imageRef.current;
-            const rect = imageElement.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
+        const angle = Math.atan2(mouseY - centerY, mouseX - centerX) * (180 / Math.PI);
 
-            const angle =
-                90 +
-                Math.atan2(
-                    mousePosition.y - centerY,
-                    mousePosition.x - centerX
-                ) *
-                    (180 / Math.PI);
-
+        // Only update if change is significant
+        if (Math.abs(angle - lastRotation) > 1) {
             setRotation(angle);
+            setLastRotation(angle);
         }
-    }, [mousePosition, x, y]);
+    }, [mousePosition, lastRotation]);
 
     if (!isVisible || !mousePosition) return null;
 
@@ -68,14 +59,18 @@ const MouseTrack: React.FC = () => {
         <div className="h-[100vh] w-[100vw] fixed left-0 top-0 pointer-events-none">
             <motion.div
                 style={{
-                    x: x,
-                    y: y,
+                    x,
+                    y,
                     position: "fixed",
                     pointerEvents: "none",
                     rotate: rotation,
                 }}
             >
-                <VideoPlayer fileName="mousetracker" className="xl:flex items-center justify-center w-[58px] h-[58px]" loop={true} />
+                <VideoPlayer
+                    fileName="mousetracker"
+                    className="w-[58px] h-[58px]"
+                    loop={true}
+                />
             </motion.div>
         </div>
     );
