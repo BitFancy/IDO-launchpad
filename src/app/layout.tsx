@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import ToTopButton from "./components/ToTopButton";
 import SideBar from "./components/SideBar";
 import { useEffect, useState } from "react";
-import MouseTrack from "./components/MouseTrack";
+import MouseTrack from "./components/MouseTracker";
 
 
 export default function RootLayout({

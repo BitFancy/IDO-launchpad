@@ -82,11 +82,11 @@ export default function LiveCard(
                     </button>
 
                     <div className="w-full flex mt-[25px] gap-4 justify-center">
-                        <a><Image className="w-[20px] h-[20px]" alt="earth" src={Earth} /></a>
-                        <a><Image className="w-[20px] h-[20px]" alt="x" src={X} /></a>
-                        <a><Image className="w-[23.5px] h-[20px]" alt="telegram" src={Telegram} /></a>
-                        <a><Image className="w-[26px] h-[20px]" alt="discord" src={Discord} /></a>
-                        <a><Image className="w-[16px] h-[20px]" alt="doc" src={Doc} /></a>
+                        <a><Image className="select-none" alt="earth" src={Earth} style={{ width: "20px", height: "auto" }} /></a>
+                        <a><Image className="select-none" alt="x" src={X} style={{width: "20px", height: "auto"}} /></a>
+                        <a><Image className="select-none" alt="telegram" src={Telegram} style={{width: "23.5px", height: "auto" }} /></a>
+                        <a><Image className="select-none" alt="discord" src={Discord} style={{width: "26px", height: "auto" }} /></a>
+                        <a><Image className="select-none" alt="doc" src={Doc} style={{width: "16px", height: "auto" }} /></a>
 
                     </div>
                 </div>

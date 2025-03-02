@@ -1,79 +1,97 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
-import { motion, useMotionValue, animate } from "framer-motion";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import VideoPlayer from "./VideoPlayer";
 
-interface MousePosition {
-    x: number;
-    y: number;
+interface MouseTrackProps {
+  size?: number; // Cursor size
+  opacity?: number; // Opacity of the tracker
 }
 
-const MouseTrack: React.FC = () => {
-    const [mousePosition, setMousePosition] = useState<MousePosition | null>(null);
-    const [isVisible, setIsVisible] = useState(false);
-    const [rotation, setRotation] = useState<number>(0);
-    const [lastRotation, setLastRotation] = useState<number>(0);
+const MouseTrack: React.FC<MouseTrackProps> = ({ size = 70, opacity = 1 }) => {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [prevPosition, setPrevPosition] = useState({ x: 0, y: 0 });
+  const [angle, setAngle] = useState(0);
+  const [visible, setVisible] = useState(false);
+  const [offSetX, setOffSetX] = useState(0);
+  const [offSetY, setOffSetY] = useState(0);
 
-    const x = useMotionValue(0);
-    const y = useMotionValue(0);
+  useEffect(() => {
+    const updatePosition = (e: MouseEvent) => {
+      const { clientX, clientY } = e;
 
-    const trackerSize = 58; // Adjust based on tracker size
-    const offset = 25; // Move tracker slightly below the mouse
+      // Calculate the movement direction (relative to the starting position)
+      const deltaX = clientX - prevPosition.x;
+      const deltaY = clientY - prevPosition.y;
 
-    const handleMouseMove = useCallback((event: MouseEvent) => {
-        const { clientX, clientY } = event;
-        
-        setMousePosition({ x: clientX, y: clientY });
-        if (!isVisible) setIsVisible(true);
+      // Calculate angle with Math.atan2 directly, and normalize it to [0, 360)
+      let newAngle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
 
-        // Smooth animation for better UX
-        animate(x, clientX - trackerSize / 2, { duration: 0.2 });
-        animate(y, clientY - trackerSize / 2 + offset, { duration: 0.2 });
-    }, [isVisible, x, y]);
+      // Normalize angle to 0-360 degrees
+      if (newAngle < 0) {
+        newAngle += 360;
+      }
 
-    useEffect(() => {
-        window.addEventListener("mousemove", handleMouseMove);
-        return () => window.removeEventListener("mousemove", handleMouseMove);
-    }, [handleMouseMove]);
+      // Smooth the transition for the angle change
+      const smoothAngle = angle + (newAngle - angle) * 0.1; // Smooth transition (0.1 is the factor for smoothing)
 
-    useEffect(() => {
-        if (!mousePosition) return;
+      // Set new angle and position
+      setAngle(smoothAngle);
+      setPrevPosition({ x: clientX, y: clientY });
+      setPosition({ x: clientX, y: clientY });
 
-        const { x: mouseX, y: mouseY } = mousePosition;
-        const centerX = window.innerWidth / 2;
-        const centerY = window.innerHeight / 2;
+      // Calculate offsets based on angle
+      const offX = size / 2 * Math.cos(smoothAngle * Math.PI / 180);  // Horizontal offset
+      const offY = size / 2 * Math.sin(smoothAngle * Math.PI / 180);  // Vertical offset
 
-        const angle = Math.atan2(mouseY - centerY, mouseX - centerX) * (180 / Math.PI);
+      setOffSetX(offX);
+      setOffSetY(offY);
+    };
 
-        // Only update if change is significant
-        if (Math.abs(angle - lastRotation) > 1) {
-            setRotation(angle);
-            setLastRotation(angle);
-        }
-    }, [mousePosition, lastRotation]);
+    const showCursor = () => setVisible(true);
+    const hideCursor = () => setVisible(false);
 
-    if (!isVisible || !mousePosition) return null;
+    const handleMouseMove = (e: MouseEvent) => {
+      requestAnimationFrame(() => updatePosition(e));
+    };
 
-    return (
-        <div className="h-[100vh] w-[100vw] fixed left-0 top-0 pointer-events-none">
-            <motion.div
-                style={{
-                    x,
-                    y,
-                    position: "fixed",
-                    pointerEvents: "none",
-                    rotate: rotation,
-                }}
-            >
-                <VideoPlayer
-                    fileName="mousetracker"
-                    className="w-[58px] h-[58px]"
-                    loop={true}
-                />
-            </motion.div>
-        </div>
-    );
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseenter", showCursor);
+    document.addEventListener("mouseleave", hideCursor);
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseenter", showCursor);
+      document.removeEventListener("mouseleave", hideCursor);
+    };
+  }, [prevPosition, size, angle]);
+
+  return (
+    <motion.div
+      className="pointer-events-none fixed top-0 left-0 z-50"
+      animate={{
+        x: position.x - offSetX, // Align the top-left corner with mouse position
+        y: position.y - offSetY, // Align the top edge with the mouse position
+        opacity: visible ? opacity : 0,
+        rotate: angle, // Rotate the tracker based on mouse movement direction
+      }}
+      transition={{
+        type: "spring",
+        stiffness: 80, // Reduced stiffness for a smoother feel
+        damping: 25, // Increased damping to reduce overshoot and make it less jittery
+        mass: 0.8, // Adding a little mass to make the movement less twitchy
+      }}
+    >
+      <VideoPlayer
+        fileName="aaa"
+        className="select-none"
+        width={size}
+        height={size}
+        loop={true}
+      />
+    </motion.div>
+  );
 };
 
 export default MouseTrack;

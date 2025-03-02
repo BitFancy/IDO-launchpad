@@ -4,18 +4,21 @@ interface VideoPlayerProps {
     fileName: string;
     className?: string;
     loop?: boolean;
+    width: number;
+    height: number;
 }
 
-const VideoPlayer = ({ fileName, className, loop }: VideoPlayerProps) => {
+const VideoPlayer = ({ fileName, className, loop, width, height }: VideoPlayerProps) => {
     const videoRef = useRef<HTMLVideoElement>(null);
     const [osType, setOsType] = useState('');
     
     useEffect(() => {
         if(videoRef.current) {
-            console.log(" osType -> ", osType);
             videoRef.current.src = osType === 'iOS' ? `/assets/back/${fileName}.mov` : `/assets/back/${fileName}.webm`;
             videoRef.current.className = className ?? "";
             videoRef.current.loop = loop ?? false;
+            videoRef.current.width = width?? "";
+            videoRef.current.height = height?? "";
         }
     }, [fileName, className, loop, osType]);
 
@@ -24,16 +27,12 @@ const VideoPlayer = ({ fileName, className, loop }: VideoPlayerProps) => {
         const userAgent = navigator.userAgent;
     
         if (/iPhone|iPad|iPod/i.test(userAgent)) {
-            console.log('its ios')
             setOsType('iOS');
         } else if (/Windows/i.test(userAgent)) {
-            console.log('its windows')
             setOsType('Windows');
         } else if (/Android/i.test(userAgent)) {
-            console.log('its android')
             setOsType('Android');
         } else {
-            console.log('its other')
             setOsType('Other');
         }
     }, []);
@@ -45,6 +44,8 @@ const VideoPlayer = ({ fileName, className, loop }: VideoPlayerProps) => {
         muted
         autoPlay
         playsInline
+        width={width}
+        height={height}
         className={className}
       />
     )

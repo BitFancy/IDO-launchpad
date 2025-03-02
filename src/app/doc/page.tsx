@@ -50,7 +50,7 @@ export default function Docs() {
     return (
         <div className='flex'>
             <div className={`w-[1300px] m-auto xs:px-[25px] flex flex-col items-center ${jost.className} `}>
-                <h1 className="text-[16px] mt-[56px] text-center font-200 text-white">Content on this page was provided by the peaq team</h1>
+                <h1 className="text-[16px] mt-[56px] text-center font-200 text-white">Content on this page was provided by the team</h1>
                 <div className="w-[300px] h-[300px] border-1 border-white mt-[26px] flex justify-center items-center">
                     <h1 className='text-[36px] text-white'>LOGO</h1>
                 </div>
